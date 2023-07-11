@@ -1,0 +1,4 @@
+flask
+#driver to make connection btwn Postgres db 
+psycopg2-binary
+Flask-SQLAlchemy
