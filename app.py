@@ -34,3 +34,37 @@ def create_user():
 
 #get all users
 @app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return make_response(jsonify([user.json() for user in users]))
+
+
+# get a user by id
+@app.route('/users/<int:id>', methods=['GET'])
+def get_user(id):
+    user = User.query.filter_by(id=id).first()
+    if user: 
+        return make_response(jsonify({'user': user.json()}), 200)
+    return make_response(jsonify({'message': 'user not found'}), 404)
+
+# update a user
+@app.route('/users/<int:id>', methods=['PUT'])
+def update_user(id):
+    user = User.query.filter_by(id=id).first()
+    if user:
+        data = request.get_json()
+        user.username=data['username']
+        user.email=data['email']
+        db.session.commit()
+        return make_response(jsonify({'message': 'user updated'}), 200)
+    return make_response(jsonify({'message': 'user not found'}), 404)
+
+# delete a user
+@app.route('/users/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    user = User.query.filter_by(id=id).first()
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return make_response(jsonify({'message': 'user deleted'}), 200)
+    return make_response(jsonify({'message': 'user not found'}), 404)
