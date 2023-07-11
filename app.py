@@ -22,3 +22,15 @@ db.create_all()
 @app.route('/test', methods=['GET'])
 def test():
   return make_response(jsonify({'message': 'test route'}), 200)
+
+# create a user
+@app.route('/users', methods=['POST'])
+def create_user():
+      data = request.get_json()
+      new_user = User(username=data['username'], email=data['email'])
+      db.session.add(new_user)
+      db.session.commit()
+      return make_response(jsonify({'message': 'user created'}), 201)
+
+#get all users
+@app.route('/users', methods=['GET'])
